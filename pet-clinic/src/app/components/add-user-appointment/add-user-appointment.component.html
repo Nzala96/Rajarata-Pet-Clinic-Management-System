@@ -1,0 +1,173 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <i class="bi bi-plus-circle me-2"></i>
+            Book New Appointment
+          </h2>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="createAppointment()">
+            <div class="row g-3">
+      
+              <div class="col-md-6">
+                <label for="appointmentDate" class="form-label">Appointment Date *</label>
+                <input 
+                  type="date" 
+                  id="appointmentDate"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.date"
+                  name="date"
+                  required>
+              </div>
+              <div class="col-md-6">
+                <label for="appointmentTime" class="form-label">Appointment Time *</label>
+                <input 
+                  type="time" 
+                  id="appointmentTime"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.time"
+                  name="time"
+                  required>
+              </div>
+
+              
+              <div class="col-md-6">
+                <label for="petName" class="form-label">Select Pet *</label>
+                <select 
+                  id="petName"
+                  class="form-select" 
+                  [(ngModel)]="appointmentForm.petname"
+                  name="petname"
+                  (change)="onPetSelected(appointmentForm.petname)"
+                  required>
+                  <option value="">Choose your pet...</option>
+                  <option *ngFor="let pet of userPets" [value]="pet.name">
+                    {{ pet.name }} ({{ pet.breed }})
+                  </option>
+                </select>
+                <div *ngIf="isLoadingPets" class="form-text">
+                  <small class="text-muted">Loading your pets...</small>
+                </div>
+                <div *ngIf="!isLoadingPets && userPets.length === 0" class="form-text">
+                  <small class="text-warning">No pets found. Please add pets to your profile first.</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="petBreed" class="form-label">Pet Breed</label>
+                <input 
+                  type="text" 
+                  id="petBreed"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.petBreed"
+                  name="petBreed"
+                  placeholder="Auto-filled when pet is selected"
+                  readonly>
+              </div>
+
+              
+              <div class="col-md-6">
+                <label for="petAge" class="form-label">Pet Age</label>
+                <input 
+                  type="text" 
+                  id="petAge"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.petAge"
+                  name="petAge"
+                  placeholder="Auto-filled when pet is selected">
+              </div>
+
+              
+              <div class="col-md-6">
+                <label for="doctor" class="form-label">Select Doctor *</label>
+                <select 
+                  id="doctor"
+                  class="form-select" 
+                  [(ngModel)]="appointmentForm.docname"
+                  name="docname"
+                  required>
+                  <option value="">Choose a doctor...</option>
+                  <option *ngFor="let doctor of doctors" [value]="doctor.dname">
+                    {{ doctor.dname }}
+                    <span *ngIf="doctor.specialization"> - {{ doctor.specialization }}</span>
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="appointmentType" class="form-label">Appointment Type</label>
+                <select 
+                  id="appointmentType"
+                  class="form-select" 
+                  [(ngModel)]="appointmentForm.appointmentType"
+                  name="appointmentType">
+                  <option value="">Select service...</option>
+                  <option *ngFor="let service of services" [value]="service.name">
+                    {{ service.name }} - Rs.{{ service.price }}
+                  </option>
+                </select>
+                <div *ngIf="isLoadingServices" class="form-text">
+                  <small class="text-muted">Loading services...</small>
+                </div>
+              </div>
+
+              
+              <div class="col-md-6">
+                <label for="contactNumber" class="form-label">Contact Number</label>
+                <input 
+                  type="tel" 
+                  id="contactNumber"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.contactNumber"
+                  name="contactNumber"
+                  placeholder="Your phone number">
+              </div>
+
+              
+              <div class="col-md-6">
+                <label for="reasonForVisit" class="form-label">Reason for Visit</label>
+                <input 
+                  type="text" 
+                  id="reasonForVisit"
+                  class="form-control" 
+                  [(ngModel)]="appointmentForm.reasonForVisit"
+                  name="reasonForVisit"
+                  placeholder="Brief description of the issue or reason for visit">
+              </div>
+
+              
+              <div class="col-12">
+                <label for="notes" class="form-label">Additional Notes</label>
+                <textarea 
+                  id="notes"
+                  class="form-control" 
+                  rows="3"
+                  [(ngModel)]="appointmentForm.notes"
+                  name="notes"
+                  placeholder="Any additional information you'd like to share..."></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">
+              <i class="bi bi-arrow-left me-2"></i>
+              Back to Appointments
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-primary" 
+              (click)="createAppointment()"
+              [disabled]="isCreating">
+              <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+              <i *ngIf="!isCreating" class="bi bi-plus-circle me-2"></i>
+              {{ isCreating ? 'Creating...' : 'Book Appointment' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

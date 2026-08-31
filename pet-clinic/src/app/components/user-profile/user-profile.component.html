@@ -1,0 +1,258 @@
+<div class="profile-bg py-5">
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-12 col-lg-8 mb-4">
+        <div class="card profile-card shadow-lg border-0">
+          <div class="card-header profile-header text-white d-flex align-items-center">
+            <div class="avatar me-3">
+              <span *ngIf="user.name; else noAvatar">
+                {{ getUserInitials() }}
+              </span>
+              <ng-template #noAvatar>
+                <i class="bi bi-person-circle"></i>
+              </ng-template>
+            </div>
+            <div>
+              <h3 class="mb-0">{{ user.name || 'User' }}</h3>
+              <div class="text-light small">{{ user.email }}</div>
+            </div>
+            <div class="ms-auto" *ngIf="!editingUser">
+              <button class="btn btn-outline-light btn-sm" (click)="startEditUser()">
+                <i class="bi bi-pencil-square me-1"></i>
+                Edit Profile
+              </button>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+        
+            <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+              <i class="bi bi-check-circle me-2"></i>
+              {{ successMessage }}
+              <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+            </div>
+            <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              {{ errorMessage }}
+              <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+            </div>
+
+        
+            <div *ngIf="loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-3 text-muted">Loading profile...</p>
+            </div>
+
+        
+            <div *ngIf="!editingUser && !loading">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="profile-info-item">
+                    <div class="label">
+                      <i class="bi bi-person me-2"></i>Full Name
+                    </div>
+                    <div class="value">{{ user.name || 'Not provided' }}</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="profile-info-item">
+                    <div class="label">
+                      <i class="bi bi-envelope me-2"></i>Email
+                    </div>
+                    <div class="value">{{ user.email || 'Not provided' }}</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="profile-info-item">
+                    <div class="label">
+                      <i class="bi bi-telephone me-2"></i>Phone
+                    </div>
+                    <div class="value">{{ user.phone || user.contactNumber || 'Not provided' }}</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="profile-info-item">
+                    <div class="label">
+                      <i class="bi bi-shield-check me-2"></i>Account Status
+                    </div>
+                    <div class="value">
+                      <span class="badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>Active
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        
+            <div *ngIf="editingUser">
+              <form (ngSubmit)="saveEditUser()" #editForm="ngForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="name" class="form-label">
+                      <i class="bi bi-person me-2"></i>Full Name
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="name" 
+                      name="name"
+                      [(ngModel)]="editedUser.name" 
+                      required
+                      minlength="2"
+                      placeholder="Enter your full name">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">
+                      <i class="bi bi-envelope me-2"></i>Email
+                    </label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="email" 
+                      name="email"
+                      [(ngModel)]="editedUser.email" 
+                      required
+                      placeholder="Enter your email">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="phone" class="form-label">
+                      <i class="bi bi-telephone me-2"></i>Phone Number
+                    </label>
+                    <input 
+                      type="tel" 
+                      class="form-control" 
+                      id="phone" 
+                      name="phone"
+                      [(ngModel)]="editedUser.phone" 
+                      placeholder="Enter your phone number">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="contactNumber" class="form-label">
+                      <i class="bi bi-phone me-2"></i>Contact Number
+                    </label>
+                    <input 
+                      type="tel" 
+                      class="form-control" 
+                      id="contactNumber" 
+                      name="contactNumber"
+                      [(ngModel)]="editedUser.contactNumber" 
+                      placeholder="Enter contact number">
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <button type="button" class="btn btn-secondary" (click)="cancelEditUser()">
+                    <i class="bi bi-x-circle me-1"></i>Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading">
+                    <i class="bi bi-check-circle me-1" *ngIf="!loading"></i>
+                    <span class="spinner-border spinner-border-sm me-1" *ngIf="loading"></span>
+                    {{ loading ? 'Saving...' : 'Save Changes' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-lg border-0 h-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-calendar-event me-2"></i>
+              Upcoming Appointments
+            </h5>
+          </div>
+          <div class="card-body p-0">
+    
+            <div *ngIf="loadingAppointments" class="text-center py-4">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2 text-muted small">Loading appointments...</p>
+            </div>
+
+
+            <div *ngIf="!loadingAppointments && upcomingAppointments.length === 0" class="text-center py-4">
+              <i class="bi bi-calendar-x text-muted" style="font-size: 2rem;"></i>
+              <p class="mt-2 text-muted">No upcoming appointments</p>
+              <small class="text-muted">Your future appointments will appear here</small>
+            </div>
+
+
+            <div *ngIf="!loadingAppointments && upcomingAppointments.length > 0" class="appointments-list">
+              <div 
+                *ngFor="let appointment of upcomingAppointments" 
+                class="appointment-item p-3 border-bottom"
+                [class.border-primary]="isAppointmentToday(appointment.date)"
+                [class.border-warning]="isAppointmentTomorrow(appointment.date)">
+                
+
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div class="appointment-date">
+                    <div class="date-display" [class.text-primary]="isAppointmentToday(appointment.date)" 
+                         [class.text-warning]="isAppointmentTomorrow(appointment.date)">
+                      {{ getAppointmentDateDisplay(appointment.date) }}
+                    </div>
+                    <div class="time-display text-muted small">
+                      <i class="bi bi-clock me-1"></i>{{ formatTime(appointment.time) }}
+                    </div>
+                  </div>
+                  <span class="badge" [ngClass]="getAppointmentStatusBadgeClass(appointment.status)">
+                    {{ getAppointmentStatusLabel(appointment.status) }}
+                  </span>
+                </div>
+
+
+                <div class="appointment-details">
+                  <div class="pet-info mb-1">
+                    <i class="bi bi-heart me-1 text-danger"></i>
+                    <strong>{{ appointment.petname }}</strong>
+                    <span *ngIf="appointment.petBreed" class="text-muted small ms-1">
+                      ({{ appointment.petBreed }})
+                    </span>
+                  </div>
+                  <div class="doctor-info text-muted small">
+                    <i class="bi bi-person-badge me-1"></i>
+                    Dr. {{ appointment.docname }}
+                  </div>
+                  <div *ngIf="appointment.appointmentType" class="appointment-type text-muted small mt-1">
+                    <i class="bi bi-tag me-1"></i>
+                    {{ appointment.appointmentType }}
+                  </div>
+                </div>
+
+
+                <div *ngIf="isAppointmentToday(appointment.date)" class="today-indicator mt-2">
+                  <span class="badge bg-primary">
+                    <i class="bi bi-star-fill me-1"></i>Today's Appointment
+                  </span>
+                </div>
+                <div *ngIf="isAppointmentTomorrow(appointment.date)" class="tomorrow-indicator mt-2">
+                  <span class="badge bg-warning text-dark">
+                    <i class="bi bi-calendar-check me-1"></i>Tomorrow
+                  </span>
+                </div>
+              </div>
+            </div>
+
+
+            <div *ngIf="!loadingAppointments && upcomingAppointments.length > 0" class="p-3 border-top">
+              <a routerLink="/my-appointments" class="btn btn-outline-primary btn-sm w-100">
+                <i class="bi bi-calendar-week me-1"></i>
+                View All Appointments
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,233 @@
+<div class="container-fluid">
+  
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h1 class="h3 mb-0">My Invoices & Payments</h1>
+        <p class="text-muted">View and manage your pet clinic invoices</p>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-secondary" (click)="refreshInvoices()" [disabled]="isLoading">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">Total Invoices</h6>
+              <h3 class="mb-0">{{ totalInvoices }}</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-receipt display-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">Total Amount</h6>
+              <h3 class="mb-0">{{ formatCurrency(totalAmount) }}</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-currency-rupee display-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">Paid Invoices</h6>
+              <h3 class="mb-0">{{ paidInvoices }}</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-check-circle display-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-dark">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">Unpaid Invoices</h6>
+              <h3 class="mb-0">{{ unpaidInvoices }}</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-exclamation-triangle display-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">
+        <i class="bi bi-search"></i> Search & Filter
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Search</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search by invoice #, service, doctor, or pet" 
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Payment Status</label>
+          <select 
+            class="form-select" 
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()">
+            <option value="">All Status</option>
+            <option *ngFor="let status of statusOptions" [value]="status">
+              {{ statusLabels[status] }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">&nbsp;</label>
+          <div class="d-grid">
+            <button class="btn btn-outline-secondary" (click)="clearFilters()">
+              <i class="bi bi-x-circle"></i> Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="bi bi-receipt"></i> My Invoices ({{ filteredInvoices.length }})
+      </h5>
+      <div class="d-flex align-items-center">
+        <button class="btn btn-outline-secondary btn-sm" (click)="refreshInvoices()" [disabled]="isLoading">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading your invoices...</p>
+      </div>
+
+      
+      <div *ngIf="!isLoading && filteredInvoices.length === 0" class="text-center py-5 no-results">
+        <i class="bi bi-receipt display-1 text-muted"></i>
+        <h5 class="mt-3">No invoices found</h5>
+        <p class="text-muted">You don't have any invoices yet, or try adjusting your search criteria.</p>
+      </div>
+
+  
+      <div *ngIf="!isLoading && filteredInvoices.length > 0" class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Service</th>
+              <th>Pet</th>
+              <th>Doctor</th>
+              <th>Issue Date</th>
+              <th>Due Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th width="120">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of filteredInvoices">
+              <td>
+                <strong>{{ invoice.invoice_number }}</strong>
+              </td>
+              <td>
+                <div>
+                  <strong>{{ invoice.service_name }}</strong>
+                  <br>
+                  <small class="text-muted">{{ invoice.service_description || 'No description' }}</small>
+                </div>
+              </td>
+              <td>
+                <span class="fw-bold">{{ invoice.pet_name || 'N/A' }}</span>
+              </td>
+              <td>
+                <span class="fw-bold">{{ invoice.doctor_name }}</span>
+              </td>
+              <td>
+                <span class="text-muted">{{ formatDate(invoice.issue_date) }}</span>
+              </td>
+              <td>
+                <div>
+                  <span [class]="isOverdue(invoice) ? 'text-danger fw-bold' : 'text-muted'">
+                    {{ formatDate(invoice.due_date) }}
+                  </span>
+                  <div *ngIf="isOverdue(invoice)" class="small text-danger">
+                    {{ getDaysOverdue(invoice) }} days overdue
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="fw-bold text-success">{{ formatCurrency(invoice.total_amount) }}</span>
+                <div *ngIf="invoice.discount && invoice.discount > 0" class="small text-muted">
+                  <del>{{ formatCurrency(invoice.service_price) }}</del>
+                  <span class="text-success">-{{ formatCurrency(invoice.discount) }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="badge" [class]="getStatusBadgeClass(invoice.payment_status)">
+                  {{ getStatusLabel(invoice.payment_status) }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button 
+                    class="btn btn-outline-primary btn-sm" 
+                    title="View Details"
+                    (click)="viewInvoiceDetails(invoice)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button 
+                    class="btn btn-outline-success btn-sm" 
+                    title="Download PDF"
+                    (click)="downloadInvoicePDF(invoice)"
+                    [disabled]="isGeneratingPDF">
+                    <i class="bi bi-file-pdf"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

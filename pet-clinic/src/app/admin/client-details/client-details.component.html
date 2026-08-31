@@ -1,0 +1,333 @@
+<!-- Client Details -->
+<div class="client-details-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <button class="btn btn-outline-secondary me-3" (click)="goBack()">
+        <i class="bi bi-arrow-left me-2"></i>
+        Back to Users
+      </button>
+      <div class="client-title" *ngIf="client">
+        <h1 class="page-title">
+          <i class="bi bi-person-circle me-3"></i>
+          {{ client.name }}
+        </h1>
+        <span [class]="getStatusBadgeClass(client.isAdmin)">
+          {{ getStatusText(client.isAdmin) }}
+        </span>
+      </div>
+    </div>
+    <div class="header-actions" *ngIf="client">
+      <button class="btn btn-success" (click)="scheduleAppointment()">
+        <i class="bi bi-calendar-plus me-2"></i>
+        Schedule Appointment
+      </button>
+      <button class="btn btn-primary" (click)="openEditModal()">
+        <i class="bi bi-pencil me-2"></i>
+        Edit User
+      </button>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" (click)="managePets()">
+            <i class="bi bi-heart me-2"></i>Manage Pets
+          </a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" (click)="openDeleteModal()">
+            <i class="bi bi-trash me-2"></i>Delete User
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading user details...</span>
+      </div>
+      <p class="loading-text">Loading user details...</p>
+    </div>
+  </div>
+
+  <!-- Client Content -->
+  <div *ngIf="!isLoading && client" class="client-content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-heart"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ clientStats.totalPets }}</h3>
+          <p>{{ getTotalPetsText(clientStats.totalPets) }}</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-calendar-event"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ formatDate(clientStats.registrationDate) }}</h3>
+          <p>Registration Date</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-person-badge"></i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ clientStats.isAdmin ? 'Admin' : 'Client' }}</h3>
+          <p>User Type</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" 
+             [class.active]="isTabActive('overview')"
+             (click)="setActiveTab('overview')">
+            <i class="bi bi-info-circle me-2"></i>
+            Overview
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" 
+             [class.active]="isTabActive('pets')"
+             (click)="setActiveTab('pets')">
+            <i class="bi bi-heart me-2"></i>
+            Pets Owned
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      <div *ngIf="isTabActive('overview')" class="tab-pane active">
+        <div class="overview-grid">
+          <!-- Basic Information -->
+          <div class="info-card">
+            <h4 class="card-title">
+              <i class="bi bi-person me-2"></i>
+              Basic Information
+            </h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Full Name</label>
+                <span>{{ client.name }}</span>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <span>{{ client.email }}</span>
+              </div>
+              <div class="info-item">
+                <label>Registration Date</label>
+                <span>{{ formatDate(client.registrationDate) }}</span>
+              </div>
+              <div class="info-item">
+                <label>User Type</label>
+                <span [class]="getStatusBadgeClass(client.isAdmin)">
+                  {{ getStatusText(client.isAdmin) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pets Owned Tab -->
+      <div *ngIf="isTabActive('pets')" class="tab-pane active">
+        <div class="pets-header">
+          <h4>Pets Owned</h4>
+          <button class="btn btn-primary" (click)="managePets()">
+            <i class="bi bi-plus-circle me-2"></i>
+            Manage Pets
+          </button>
+        </div>
+
+        <div *ngIf="isLoadingPets" class="loading-state">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading pets...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoadingPets" class="pets-grid">
+          <div *ngFor="let pet of clientPets" class="pet-card">
+            <div class="pet-header">
+              <div class="pet-icon">
+                <i [class]="getPetTypeIcon(pet.type)"></i>
+              </div>
+              <div class="pet-info">
+                <h5>{{ pet.name }}</h5>
+                <p class="pet-type">{{ pet.type }} - {{ pet.breed }}</p>
+              </div>
+              <div class="pet-actions">
+                <button class="btn btn-outline-primary btn-sm" (click)="viewPetDetails(pet.id)">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="pet-details">
+              <div class="pet-stats">
+                <div class="stat-item">
+                  <label>Age</label>
+                  <span>{{ pet.age }} years</span>
+                </div>
+                <div class="stat-item">
+                  <label>Gender</label>
+                  <span>{{ pet.gender | titlecase }}</span>
+                </div>
+                <div class="stat-item">
+                  <label>Registration Date</label>
+                  <span>{{ formatDate(pet.registrationDate) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoadingPets && clientPets.length === 0" class="empty-state">
+          <i class="bi bi-heart empty-icon"></i>
+          <h5>No pets found</h5>
+          <p>This user doesn't have any pets registered yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil me-2"></i>
+          Edit User: {{ client?.name }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="client">
+          <div class="row">
+            <!-- Basic Information -->
+            <div class="col-md-6">
+              <h6 class="section-title">Basic Information</h6>
+              
+              <div class="mb-3">
+                <label class="form-label">Full Name *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="editForm.name"
+                  name="editName"
+                  required>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Email Address *</label>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  [(ngModel)]="editForm.email"
+                  name="editEmail"
+                  required>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <h6 class="section-title">User Status</h6>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    [(ngModel)]="editForm.isAdmin"
+                    name="editIsAdmin"
+                    id="editIsAdmin">
+                  <label class="form-check-label" for="editIsAdmin">
+                    Admin User
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="updateClient()"
+          [disabled]="isUpdating || !isValidEditForm()">
+          <span *ngIf="isUpdating">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Updating...
+          </span>
+          <span *ngIf="!isUpdating">
+            <i class="bi bi-check-circle me-2"></i>
+            Update User
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" [class.show]="showDeleteModal" [style.display]="showDeleteModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Delete User
+        </h5>
+        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <strong>Warning:</strong> This action cannot be undone.
+        </div>
+        <p>Are you sure you want to delete user <strong>{{ client?.name }}</strong>?</p>
+        <p class="text-muted">This will also remove all associated data including:</p>
+        <ul class="text-muted">
+          <li>User account</li>
+          <li>Pet ownership records</li>
+          <li>All associated data</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteClient()">
+          <i class="bi bi-trash me-2"></i>
+          Delete User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div 
+  class="modal-backdrop fade" 
+  [class.show]="showEditModal || showDeleteModal"
+  *ngIf="showEditModal || showDeleteModal">
+</div> 

@@ -1,0 +1,70 @@
+# ==========================================
+# Angular Frontend
+# ==========================================
+
+pet-clinic/node_modules/
+pet-clinic/dist/
+pet-clinic/.angular/
+pet-clinic/.cache/
+
+# Angular environment files
+pet-clinic/src/environments/*.local.ts
+
+
+# ==========================================
+# Laravel Backend
+# ==========================================
+
+RPC_back/vendor/
+RPC_back/node_modules/
+
+# Laravel environment / secrets
+RPC_back/.env
+RPC_back/.env.*.local
+
+# Laravel cache / generated files
+RPC_back/storage/framework/cache/*
+RPC_back/storage/framework/sessions/*
+RPC_back/storage/framework/views/*
+RPC_back/storage/logs/*
+
+# Keep Laravel storage directories
+!RPC_back/storage/framework/
+!RPC_back/storage/framework/cache/
+!RPC_back/storage/framework/sessions/
+!RPC_back/storage/framework/views/
+!RPC_back/storage/logs/
+
+# Laravel compiled/cache files
+RPC_back/bootstrap/cache/*.php
+
+
+# ==========================================
+# Operating System
+# ==========================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# ==========================================
+# IDE / Editors
+# ==========================================
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.vs/
+.idea/
+
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

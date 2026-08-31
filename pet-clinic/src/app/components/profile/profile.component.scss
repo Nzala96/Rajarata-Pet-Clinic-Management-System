@@ -1,0 +1,389 @@
+.pet-profile-bg {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  min-height: 100vh;
+}
+
+// Empty State
+.empty-state {
+    padding-top: 50px; background: white;
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 2px dashed #e2e8f0;
+}
+
+// Pet Cards
+.pet-card {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #f1f5f9;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.pet-card-header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pet-avatar {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.pet-info {
+  flex: 1;
+}
+
+.pet-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: white;
+}
+
+.pet-type {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+  color: white;
+}
+
+.pet-actions {
+  .btn {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+.pet-card-body {
+  padding: 1.5rem;
+}
+
+.pet-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .value {
+    font-size: 0.875rem;
+    color: #1e293b;
+    font-weight: 600;
+  }
+}
+
+// Medical History Preview
+.medical-history-preview {
+  .section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.no-history {
+  text-align: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+}
+
+.history-list {
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .history-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    min-width: 60px;
+  }
+
+  .history-details {
+    flex: 1;
+  }
+
+  .history-doctor {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .history-type {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .more-history {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+}
+
+// Medical History Section
+.medical-history-section {
+  background: white;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+}
+
+.section-header {
+  color: #1e293b;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin: 0; // Remove default margin for flex layout
+}
+
+// Refresh button styling
+.btn-outline-primary {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  
+  &:hover {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// No medical history section
+.text-center {
+  .display-1 {
+    font-size: 4rem;
+    color: #9ca3af;
+  }
+  
+  h4 {
+    color: #6b7280;
+    font-weight: 600;
+  }
+  
+  p {
+    color: #9ca3af;
+    font-size: 1.1rem;
+  }
+}
+
+.medical-records {
+  .medical-record {
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+.record-header {
+  background: #f8fafc;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.record-date {
+  text-align: center;
+  min-width: 80px;
+
+  .date-day {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .date-time {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+}
+
+.record-pet {
+  .pet-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .pet-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+
+    .breed, .age {
+      background: #e2e8f0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+  }
+}
+
+.record-doctor {
+  text-align: center;
+
+  .doctor-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .appointment-type {
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+}
+
+.record-status {
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+.record-body {
+  padding: 1.5rem;
+}
+
+.record-section {
+  margin-bottom: 1.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-content {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid #6366f1;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .pet-card-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .pet-actions {
+    align-self: flex-end;
+  }
+
+  .record-header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .record-date {
+    min-width: auto;
+  }
+
+  .pet-details {
+    justify-content: center;
+  }
+
+  .section-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .pet-profile-bg {
+    padding: 1rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .pet-card {
+    margin-bottom: 1rem;
+  }
+
+  .medical-history-section {
+    padding: 1rem;
+  }
+}

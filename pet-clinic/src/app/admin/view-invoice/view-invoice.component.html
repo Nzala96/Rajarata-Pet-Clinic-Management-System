@@ -1,0 +1,163 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="h4 mb-0">
+            <i class="bi bi-receipt me-2"></i>
+            Invoice Details
+          </h2>
+          <p class="text-muted mb-0" *ngIf="invoice">
+            Invoice #{{ invoice.invoice_number }}
+          </p>
+        </div>
+        <div class="btn-group">
+          <button 
+            class="btn btn-outline-secondary" 
+            (click)="goBack()"
+            title="Go Back">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Billing
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading invoice details...</p>
+  </div>
+
+  <!-- Invoice Details -->
+  <div *ngIf="!isLoading && invoice" class="row">
+    <!-- Main Invoice Information -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-file-text me-2"></i>
+            Invoice Information
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Invoice #:</strong></div>
+                <div class="col-sm-7">{{ invoice.invoice_number }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Patient:</strong></div>
+                <div class="col-sm-7">{{ invoice.patient_name }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Email:</strong></div>
+                <div class="col-sm-7">{{ invoice.patient_email }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Phone:</strong></div>
+                <div class="col-sm-7">{{ invoice.patient_phone }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Pet:</strong></div>
+                <div class="col-sm-7">{{ invoice.pet_name || 'N/A' }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Doctor:</strong></div>
+                <div class="col-sm-7">{{ invoice.doctor_name }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Service:</strong></div>
+                <div class="col-sm-7">{{ invoice.service_name }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Issue Date:</strong></div>
+                <div class="col-sm-7">{{ formatDate(invoice.issue_date) }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Due Date:</strong></div>
+                <div class="col-sm-7">{{ formatDate(invoice.due_date) }}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-5"><strong>Status:</strong></div>
+                <div class="col-sm-7">
+                  <span [class]="getStatusBadgeClass(invoice.payment_status)">
+                    {{ getPaymentStatusLabel(invoice.payment_status) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Service Description -->
+          <div *ngIf="invoice.service_description" class="mt-4">
+            <h6><strong>Service Description:</strong></h6>
+            <p class="text-muted">{{ invoice.service_description }}</p>
+          </div>
+          
+          <!-- Notes section removed as requested -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar with Financial Details and Actions -->
+    <div class="col-md-4">
+      <!-- Financial Summary -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+          <h6 class="mb-0">
+            <i class="bi bi-calculator me-2"></i>
+            Financial Summary
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-8">Service Price:</div>
+            <div class="col-4 text-end">{{ formatCurrency(invoice.service_price) }}</div>
+          </div>
+          <div class="row mb-2" *ngIf="invoice.additional_charges && invoice.additional_charges > 0">
+            <div class="col-8">Additional Charges:</div>
+            <div class="col-4 text-end">{{ formatCurrency(invoice.additional_charges) }}</div>
+          </div>
+          <div class="row mb-2" *ngIf="invoice.discount && invoice.discount > 0">
+            <div class="col-8">Discount:</div>
+            <div class="col-4 text-end text-success">-{{ formatCurrency(invoice.discount) }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-8">Tax ({{ invoice.tax_rate }}%):</div>
+            <div class="col-4 text-end">{{ formatCurrency(invoice.tax_amount || 0) }}</div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-8"><strong>Total Amount:</strong></div>
+            <div class="col-4 text-end fw-bold text-success">{{ formatCurrency(invoice.total_amount) }}</div>
+          </div>
+        </div>
+      </div>
+
+    
+
+      <!-- Quick Actions -->
+     
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !invoice" class="text-center py-5">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Invoice not found or failed to load.
+    </div>
+    <button class="btn btn-primary" (click)="goBack()">
+      <i class="bi bi-arrow-left me-1"></i>
+      Back to Billing
+    </button>
+  </div>
+</div>

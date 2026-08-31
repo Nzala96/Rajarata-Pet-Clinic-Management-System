@@ -1,0 +1,473 @@
+<div class="disease-diagnosis-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="diagnosis-header">
+            <h1 class="text-center mb-4">
+              <i class="fas fa-stethoscope me-3"></i>
+              Pet Disease Diagnosis Checker
+            </h1>
+            <p class="text-center text-muted mb-4">
+              Enter your pet's symptoms to get potential disease diagnoses and treatment recommendations
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <!-- Diagnosis Form -->
+      <div class="col-lg-8">
+        <div class="diagnosis-form-card">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-clipboard-list me-2"></i>
+                Symptom Assessment
+              </h5>
+            </div>
+            <div class="card-body">
+              <!-- Pet Information -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label for="petType" class="form-label fw-bold">
+                    <i class="fas fa-paw me-2"></i>Pet Type
+                  </label>
+                  <select 
+                    id="petType" 
+                    class="form-select" 
+                    [(ngModel)]="diagnosisRequest.petType"
+                    (change)="onPetTypeChange()">
+                    <option *ngFor="let type of petTypes" [value]="type">
+                      {{ type }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="breed" class="form-label fw-bold">
+                    <i class="fas fa-tag me-2"></i>Breed (Optional)
+                  </label>
+                  <input 
+                    type="text" 
+                    id="breed" 
+                    class="form-control" 
+                    [(ngModel)]="diagnosisRequest.breed"
+                    placeholder="e.g., Golden Retriever, Persian">
+                </div>
+              </div>
+
+              <!-- Advanced Options Toggle -->
+              <div class="mb-3">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="toggleAdvancedOptions()">
+                  <i class="fas fa-cog me-2"></i>
+                  {{ showAdvancedOptions ? 'Hide' : 'Show' }} Advanced Options
+                </button>
+              </div>
+
+              <!-- Advanced Options -->
+              <div class="row mb-4" *ngIf="showAdvancedOptions">
+                <div class="col-md-4">
+                  <label for="age" class="form-label fw-bold">
+                    <i class="fas fa-birthday-cake me-2"></i>Age (years)
+                  </label>
+                  <input 
+                    type="number" 
+                    id="age" 
+                    class="form-control" 
+                    [(ngModel)]="diagnosisRequest.age"
+                    min="0" 
+                    max="30"
+                    placeholder="e.g., 5">
+                </div>
+                <div class="col-md-4">
+                  <label for="weight" class="form-label fw-bold">
+                    <i class="fas fa-weight me-2"></i>Weight (lbs)
+                  </label>
+                  <input 
+                    type="number" 
+                    id="weight" 
+                    class="form-control" 
+                    [(ngModel)]="diagnosisRequest.weight"
+                    min="0" 
+                    max="200"
+                    placeholder="e.g., 25">
+                </div>
+                <div class="col-md-4">
+                  <label for="duration" class="form-label fw-bold">
+                    <i class="fas fa-clock me-2"></i>Duration
+                  </label>
+                  <input 
+                    type="text" 
+                    id="duration" 
+                    class="form-control" 
+                    [(ngModel)]="diagnosisRequest.duration"
+                    placeholder="e.g., 2 days, 1 week">
+                </div>
+              </div>
+
+              <!-- Symptom Selection -->
+              <div class="symptom-selection mb-4">
+                <h6 class="fw-bold mb-3">
+                  <i class="fas fa-search me-2"></i>Select Symptoms
+                </h6>
+                
+                <!-- Symptom Search and Filter -->
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="symptomSearch" class="form-label">Search Symptoms</label>
+                    <div class="input-group">
+                      <input 
+                        type="text" 
+                        id="symptomSearch" 
+                        class="form-control" 
+                        [(ngModel)]="symptomSearchTerm"
+                        (input)="onSymptomSearch()"
+                        placeholder="Type to search symptoms...">
+                      <button 
+                        class="btn btn-outline-primary" 
+                        type="button"
+                        (click)="addCustomSymptom()"
+                        [disabled]="!symptomSearchTerm.trim()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="symptomCategory" class="form-label">Filter by Category</label>
+                    <select 
+                      id="symptomCategory" 
+                      class="form-select" 
+                      [(ngModel)]="selectedSymptomCategory"
+                      (change)="onSymptomCategoryChange()">
+                      <option value="">All Categories</option>
+                      <option *ngFor="let category of symptomCategories" [value]="category">
+                        {{ category }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Selected Symptoms -->
+                <div class="selected-symptoms mb-3" *ngIf="selectedSymptoms.length > 0">
+                  <label class="form-label fw-bold">Selected Symptoms:</label>
+                  <div class="selected-symptoms-list">
+                    <span 
+                      *ngFor="let symptom of selectedSymptoms" 
+                      class="badge bg-primary me-2 mb-2 symptom-badge">
+                      {{ symptom }}
+                      <button 
+                        type="button" 
+                        class="btn-close btn-close-white ms-2" 
+                        (click)="removeSymptom(symptom)">
+                      </button>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Available Symptoms -->
+                <div class="available-symptoms">
+                  <label class="form-label fw-bold">Available Symptoms:</label>
+                  <div class="symptoms-grid">
+                    <div 
+                      *ngFor="let symptom of filteredSymptoms" 
+                      class="symptom-item"
+                      [class.selected]="isSymptomSelected(symptom.name)"
+                      (click)="toggleSymptom(symptom.name)">
+                      <div class="symptom-content">
+                        <h6 class="symptom-name">{{ symptom.name }}</h6>
+                        <p class="symptom-description">{{ symptom.description }}</p>
+                        <div class="symptom-meta">
+                          <span class="badge bg-secondary me-2">{{ symptom.category }}</span>
+                          <span class="badge" 
+                                [class]="symptom.severity === 'Severe' ? 'bg-danger' : 
+                                         symptom.severity === 'Moderate' ? 'bg-warning text-dark' : 'bg-success'">
+                            {{ symptom.severity }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="symptom-check">
+                        <i class="fas fa-check" *ngIf="isSymptomSelected(symptom.name)"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Notes -->
+              <div class="mb-4">
+                <label for="additionalNotes" class="form-label fw-bold">
+                  <i class="fas fa-notes-medical me-2"></i>Additional Notes
+                </label>
+                <textarea 
+                  id="additionalNotes" 
+                  class="form-control" 
+                  rows="3"
+                  [(ngModel)]="diagnosisRequest.additionalNotes"
+                  placeholder="Any additional information about your pet's condition..."></textarea>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2">
+                <button 
+                  type="button" 
+                  class="btn btn-primary btn-lg"
+                  (click)="performDiagnosis()"
+                  [disabled]="isLoading || selectedSymptoms.length === 0">
+                  <i class="fas fa-stethoscope me-2" *ngIf="!isLoading"></i>
+                  <i class="fas fa-spinner fa-spin me-2" *ngIf="isLoading"></i>
+                  {{ isLoading ? 'Analyzing...' : 'Perform Diagnosis' }}
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary btn-lg"
+                  (click)="clearDiagnosis()">
+                  <i class="fas fa-eraser me-2"></i>
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Sidebar -->
+      <div class="col-lg-4">
+        <div class="diagnosis-results-sidebar">
+          <!-- Quick Stats -->
+          <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+              <h6 class="card-title">Selected Symptoms</h6>
+              <div class="display-4 text-primary">{{ selectedSymptoms.length }}</div>
+              <small class="text-muted">symptoms selected</small>
+            </div>
+          </div>
+
+          <!-- Diagnosis Results -->
+          <div class="card shadow-sm" *ngIf="hasResults">
+            <div class="card-header bg-success text-white">
+              <h6 class="mb-0">
+                <i class="fas fa-clipboard-check me-2"></i>
+                Diagnosis Results
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="results-summary mb-3">
+                <p class="mb-2">
+                  <strong>Found {{ diagnosisResults.length }} potential diagnosis(es)</strong>
+                </p>
+                <small class="text-muted">
+                  Results are based on symptom matching and may require veterinary confirmation
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Information Card -->
+          <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+              <h6 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Important Information
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-warning mb-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Disclaimer:</strong> This tool is for informational purposes only and should not replace professional veterinary care.
+              </div>
+              <ul class="list-unstyled small">
+                <li class="mb-2">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Always consult a veterinarian for proper diagnosis
+                </li>
+                <li class="mb-2">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Emergency symptoms require immediate veterinary attention
+                </li>
+                <li class="mb-2">
+                  <i class="fas fa-check-circle text-success me-2"></i>
+                  Treatment recommendations are general guidelines
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagnosis Results Section -->
+    <div class="row mt-4" *ngIf="hasResults && diagnosisResults.length > 0">
+      <div class="col-12">
+        <div class="diagnosis-results-section">
+          <h3 class="mb-4">
+            <i class="fas fa-clipboard-list me-3"></i>
+            Diagnosis Results
+          </h3>
+          
+          <div class="results-container">
+            <div 
+              *ngFor="let result of diagnosisResults; let i = index" 
+              class="diagnosis-result-card mb-4">
+              <div class="card shadow">
+                <div class="card-header" [class]="result.urgency === 'Emergency' ? 'bg-danger text-white' : 
+                                                   result.urgency === 'High' ? 'bg-warning text-dark' : 
+                                                   result.urgency === 'Medium' ? 'bg-info text-white' : 'bg-success text-white'">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                      <i class="fas fa-disease me-2"></i>
+                      {{ result.disease.name }}
+                    </h5>
+                    <div class="result-meta">
+                      <span class="badge bg-light text-dark me-2">
+                        {{ result.confidence }}% Match
+                      </span>
+                      <span class="badge" [class]="getSeverityClass(result.disease.severity)">
+                        {{ result.disease.severity }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Disease Description -->
+                  <div class="disease-description mb-3">
+                    <p class="mb-2">{{ result.disease.description }}</p>
+                    <div class="disease-meta">
+                      <span class="badge bg-secondary me-2">{{ result.disease.category }}</span>
+                      <span class="badge" [class]="result.disease.contagious ? 'bg-danger' : 'bg-success'">
+                        {{ result.disease.contagious ? 'Contagious' : 'Non-Contagious' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Confidence and Urgency -->
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="confidence-meter">
+                        <label class="form-label fw-bold">Confidence Level</label>
+                        <div class="progress mb-2">
+                          <div 
+                            class="progress-bar" 
+                            [class]="result.confidence >= 80 ? 'bg-success' : 
+                                     result.confidence >= 60 ? 'bg-warning' : 
+                                     result.confidence >= 40 ? 'bg-info' : 'bg-secondary'"
+                            [style.width.%]="result.confidence">
+                          </div>
+                        </div>
+                        <small class="text-muted">{{ result.confidence }}% match</small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="urgency-indicator">
+                        <label class="form-label fw-bold">Urgency Level</label>
+                        <div class="urgency-badge" [class]="getUrgencyClass(result.urgency)">
+                          <i class="fas fa-exclamation-triangle me-2" *ngIf="result.urgency === 'Emergency'"></i>
+                          <i class="fas fa-exclamation me-2" *ngIf="result.urgency === 'High'"></i>
+                          <i class="fas fa-info-circle me-2" *ngIf="result.urgency === 'Medium'"></i>
+                          <i class="fas fa-check-circle me-2" *ngIf="result.urgency === 'Low'"></i>
+                          {{ result.urgency }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Symptoms Analysis -->
+                  <div class="symptoms-analysis mb-3">
+                    <h6 class="fw-bold mb-2">Symptoms Analysis</h6>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="matched-symptoms">
+                          <label class="form-label text-success fw-bold">
+                            <i class="fas fa-check-circle me-2"></i>Matched Symptoms
+                          </label>
+                          <ul class="list-unstyled">
+                            <li *ngFor="let symptom of result.matchedSymptoms" class="text-success">
+                              <i class="fas fa-check me-2"></i>{{ symptom }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="missing-symptoms">
+                          <label class="form-label text-muted fw-bold">
+                            <i class="fas fa-question-circle me-2"></i>Other Common Symptoms
+                          </label>
+                          <ul class="list-unstyled">
+                            <li *ngFor="let symptom of result.missingSymptoms" class="text-muted">
+                              <i class="fas fa-minus me-2"></i>{{ symptom }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Treatments -->
+                  <div class="treatments-section mb-3" *ngIf="result.disease.treatments.length > 0">
+                    <h6 class="fw-bold mb-2">Treatment Options</h6>
+                    <div class="treatments-list">
+                      <div 
+                        *ngFor="let treatment of result.disease.treatments" 
+                        class="treatment-item mb-2">
+                        <div class="treatment-header">
+                          <h6 class="mb-1">{{ treatment.name }}</h6>
+                                                  <div class="treatment-meta">
+                          <span class="badge bg-primary me-2">{{ treatment.type }}</span>
+                          <span class="badge bg-info me-2">{{ treatment.duration }}</span>
+                          <span class="badge bg-secondary" *ngIf="treatment.cost !== undefined">{{ formatCurrency(treatment.cost) }}</span>
+                        </div>
+                        </div>
+                        <p class="treatment-description mb-1">{{ treatment.description }}</p>
+                        <div class="treatment-effectiveness">
+                          <small class="text-muted">
+                            Effectiveness: {{ treatment.effectiveness }}%
+                            <span class="ms-2" *ngIf="treatment.requiresVet">
+                              <i class="fas fa-user-md text-warning"></i> Requires vet
+                            </span>
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Recommended Actions -->
+                  <div class="recommended-actions mb-3">
+                    <h6 class="fw-bold mb-2">Recommended Actions</h6>
+                    <div class="actions-list">
+                      <div 
+                        *ngFor="let action of result.recommendedActions" 
+                        class="action-item mb-2">
+                        <i class="fas fa-arrow-right text-primary me-2"></i>
+                        {{ action }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Prevention -->
+                  <div class="prevention-section" *ngIf="result.disease.prevention.length > 0">
+                    <h6 class="fw-bold mb-2">Prevention Tips</h6>
+                    <div class="prevention-list">
+                      <div 
+                        *ngFor="let prevention of result.disease.prevention" 
+                        class="prevention-item mb-1">
+                        <i class="fas fa-shield-alt text-success me-2"></i>
+                        {{ prevention }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

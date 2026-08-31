@@ -1,0 +1,281 @@
+// Main container
+.container-fluid {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+// Page header styling
+.page-header {
+  margin-bottom: 2rem;
+  
+  .row {
+    align-items: center;
+  }
+  
+  h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    
+    i {
+      color: #3498db;
+    }
+  }
+  
+  p {
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+}
+
+// Card styling
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+    
+    h5 {
+      margin: 0;
+      
+      i {
+        color: #ffd700;
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+// Form controls
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid #e0e6ed;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+}
+
+// Button styling
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  }
+}
+
+.btn-outline-primary {
+  border-color: #667eea;
+  color: #667eea;
+  
+  &:hover {
+    background: #667eea;
+    border-color: #667eea;
+  }
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+  
+  &:hover {
+    background: #6c757d;
+    border-color: #6c757d;
+  }
+}
+
+// Table styling
+.table {
+  border-radius: 12px;
+  overflow: hidden;
+  
+  th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+  }
+  
+  td {
+    vertical-align: middle;
+    border-color: #f1f3f4;
+    padding: 1rem 0.75rem;
+  }
+  
+  tbody tr {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #f8f9ff;
+      transform: scale(1.01);
+    }
+  }
+}
+
+// Badge styling
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.5em 0.75em;
+  border-radius: 20px;
+  
+  &.bg-success {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%) !important;
+  }
+  
+  &.bg-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+  }
+  
+  &.bg-light {
+    background: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #dee2e6;
+  }
+}
+
+// Button groups
+.btn-group {
+  .btn {
+    margin: 0 2px;
+    
+    &.btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Avatar placeholder
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  i {
+    color: #6c757d;
+  }
+}
+
+// Pagination styling
+.pagination {
+  .page-item {
+    margin: 0 2px;
+    
+    .page-link {
+      border: none;
+      border-radius: 8px;
+      color: #667eea;
+      font-weight: 500;
+      
+      &:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+      }
+    }
+    
+    &.active .page-link {
+      background: #667eea;
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+  }
+}
+
+/* Custom Modal Styles for Delete Doctor */
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 340px;
+  max-width: 95vw;
+  padding: 0;
+  overflow: hidden;
+  animation: fadeInScale 0.2s;
+}
+.custom-modal-header {
+  padding: 1rem 1.5rem 0.5rem 1.5rem;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  background: #f8f9fa;
+}
+.custom-modal-body {
+  padding: 1.5rem;
+}
+.custom-modal-footer {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid #eee;
+  background: #f8f9fa;
+}
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+// Loading spinner
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  
+  &.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// No results state
+.no-results {
+  .bi {
+    opacity: 0.5;
+  }
+  
+  h5 {
+    color: #6c757d;
+  }
+  
+  p {
+    color: #6c757d;
+  }
+} 

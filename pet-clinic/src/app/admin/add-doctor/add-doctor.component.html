@@ -1,0 +1,119 @@
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="bi bi-plus-circle me-2"></i>
+    Add New Doctor
+  </h2>
+  
+  <div class="card">
+    <div class="card-body">
+      <form #createFormRef="ngForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Doctor Name *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="createForm.dname" 
+                name="dname" 
+                required 
+                placeholder="Enter doctor's full name">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Email *</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                [(ngModel)]="createForm.demail" 
+                name="demail" 
+                required 
+                placeholder="Enter email address">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Phone Number *</label>
+              <input 
+                type="tel" 
+                class="form-control" 
+                [(ngModel)]="createForm.dtp" 
+                name="dtp" 
+                required 
+                placeholder="Enter phone number">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Specialization</label>
+              <select 
+                class="form-select" 
+                [(ngModel)]="createForm.specialization" 
+                name="specialization">
+                <option value="">Select specialization</option>
+                <option *ngFor="let spec of specializations" [value]="spec">{{ spec }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Experience (years)</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="createForm.experience" 
+                name="experience" 
+                min="0" 
+                placeholder="Years of experience">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Education</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="createForm.education" 
+                name="education" 
+                placeholder="Educational background">
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <div class="form-check">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              [(ngModel)]="createForm.available" 
+              name="available" 
+              id="createAvailable">
+            <label class="form-check-label" for="createAvailable">
+              Available for appointments
+            </label>
+          </div>
+        </div>
+        
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            (click)="createDoctor()" 
+            [disabled]="isCreating || createFormRef.invalid">
+            <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isCreating" class="bi bi-plus-circle me-2"></i>
+            {{ isCreating ? 'Creating...' : 'Create Doctor' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,311 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Rajarata Pet Clinic</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <i class="fa-solid fa-user"></i>
+          <a class="nav-link" routerLink="/#contact">{{ username || 'User Name' }}</a>
+        </li>
+      </ul>
+      <!-- <a routerLink="/appointment" class="btn btn-primary appointment-btn">Make an Appointment</a> -->
+      <div>
+        <a (click)="signOut()" class="btn btn-primary appointment-btn loginBtn">SignOut</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<aside id="sidebar" class="sidebar">
+
+  <!-- Debug Section - Remove this in production -->
+  <div class="debug-section p-3 border-bottom" style="background-color: #f8f9fa;">
+    <small class="text-muted">
+      <strong>Debug Info:</strong><br>
+      Username: {{ username || 'Not logged in' }}<br>
+      Admin Status: {{ userIsAdmin || 'Not set' }}<br>
+      Show Admin Menu: {{ userIsAdmin === 'true' ? 'Yes' : 'No' }}
+    </small>
+    <button class="btn btn-sm btn-outline-primary mt-2" (click)="toggleAdminStatus()">
+      Toggle Admin Status
+    </button>
+  </div>
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link " href="/dashboard">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item" *ngIf="userIsAdmin === 'true'">
+      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>Admin</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/view-users']">
+            <i class="bi bi-circle"></i><span>Users</span>
+          </a>
+        </li>
+        <!--
+        <li>
+          <a [routerLink]="['/view-appointment']">
+            <i class="bi bi-circle"></i><span>Appointments</span>
+          </a>
+          
+        </li>-->
+
+        <li>
+        <a [routerLink]="['/admin/view-appointments']">
+          <i class="bi bi-circle"></i>
+          <span>Manage Appointments</span>
+        </a>
+        <ul>
+          <li>
+            <a [routerLink]="['/admin/appointment-management/admin-view-appointment/view']">
+              View Appointments
+            </a>
+          </li>
+        </ul>
+      </li>
+
+
+        <li>
+          <a href="components-badges.html">
+            <i class="bi bi-circle"></i><span>Announcement</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-breadcrumbs.html">
+            <i class="bi bi-circle"></i><span>Manage Pet Details</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-buttons.html">
+            <i class="bi bi-circle"></i><span>Medical History</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-cards.html">
+            <i class="bi bi-circle"></i><span>Payment Details</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Components Nav -->
+
+    <li class="nav-item" *ngIf="userIsAdmin === 'true'">
+      <a class="nav-link collapsed" data-bs-target="#doctor-nav" data-bs-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="doctor-nav">
+        <i class="bi bi-person-fill-gear"></i><span>Manage Doctors</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="doctor-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/admin/doctors']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Doctor Management</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/doctors/add']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Add New Doctor</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/doctors/all']" class="nav-link">
+            <i class="bi bi-circle"></i><span>View All Doctors</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item" *ngIf="userIsAdmin === 'true'">
+      <a class="nav-link collapsed" data-bs-target="#service-nav" data-bs-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="service-nav">
+        <i class="bi bi-gear-fill"></i><span>Manage Services</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/admin/services']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Service Management</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/services/add']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Add New Service</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/services/all']" class="nav-link">
+            <i class="bi bi-circle"></i><span>View All Services</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/services/pricing']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Pricing Management</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item" *ngIf="userIsAdmin === 'true'">
+      <a class="nav-link collapsed" data-bs-target="#billing-nav" data-bs-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="billing-nav">
+        <i class="bi bi-receipt"></i><span>Billing & Invoices</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="billing-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/admin/billing']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Invoice Management</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/billing/create']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Create Invoice</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/billing/payments']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Payment Tracking</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/billing/reports']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Financial Reports</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item" *ngIf="userIsAdmin === 'true'">
+      <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="reports-nav">
+        <i class="bi bi-graph-up"></i><span>Reports & Analytics</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/admin/reports']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Reports Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/reports/appointments']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Appointment Statistics</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/reports/clients']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Client Visit Frequency</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/admin/reports/earnings']" class="nav-link">
+            <i class="bi bi-circle"></i><span>Earnings Report</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Appointment</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a [routerLink]="['/appointment']">
+            <i class="bi bi-circle"></i><span>Create Appointment</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/update-appointment']">
+            <i class="bi bi-circle"></i><span>Update Appoinment</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/view-appointment']">
+            <i class="bi bi-circle"></i><span>view appointment</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-login.html">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span>Medical History</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-gem"></i><span>Payment</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="icons-bootstrap.html">
+            <i class="bi bi-circle"></i><span>Make Payment</span>
+          </a>
+        </li>
+        <li>
+          <a href="icons-remix.html">
+            <i class="bi bi-circle"></i><span>Payment History</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Icons Nav -->
+
+    <li class="nav-heading">Pages</li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="users-profile.html">
+        <i class="bi bi-person"></i>
+        <span>Profile</span>
+      </a>
+    </li><!-- End Profile Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-faq.html">
+        <i class="bi bi-question-circle"></i>
+        <span>F.A.Q</span>
+      </a>
+    </li><!-- End F.A.Q Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="/contact">
+        <i class="bi bi-envelope"></i>
+        <span>Contact</span>
+      </a>
+    </li><!-- End Contact Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-register.html">
+        <i class="bi bi-card-list"></i>
+        <span>Register</span>
+      </a>
+    </li><!-- End Register Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-login.html">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span>Login</span>
+      </a>
+    </li><!-- End Login Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-error-404.html">
+        <i class="bi bi-dash-circle"></i>
+        <span>Error 404</span>
+      </a>
+    </li><!-- End Error 404 Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="pages-blank.html">
+        <i class="bi bi-file-earmark"></i>
+        <span>Blank</span>
+      </a>
+    </li><!-- End Blank Page Nav -->
+
+  </ul>
+
+</aside><!-- End Sidebar-->

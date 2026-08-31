@@ -1,0 +1,266 @@
+<div class="container-fluid mt-4">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>
+        <i class="bi bi-calendar-heart me-2 text-primary"></i>
+        My Appointments
+      </h2>
+      <p class="text-muted mb-0">Manage your pet's veterinary appointments</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" (click)="refreshAppointments()">
+        <i class="bi bi-arrow-clockwise me-2"></i>
+        Refresh
+      </button>
+      <button class="btn btn-primary" routerLink="/my-appointments/add">
+        <i class="bi bi-plus-circle me-2"></i>
+        New Appointment
+      </button>
+    </div>
+  </div>
+
+  
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">
+        <i class="bi bi-funnel me-2"></i>
+        Search & Filter
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label for="searchTerm" class="form-label">Search</label>
+          <input 
+            type="text" 
+            id="searchTerm"
+            class="form-control" 
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+            placeholder="Search by pet name, doctor, or reason...">
+        </div>
+
+        
+        <div class="col-md-4">
+          <label for="statusFilter" class="form-label">Status</label>
+          <select 
+            id="statusFilter"
+            class="form-select" 
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()">
+            <option value="">All Statuses</option>
+            <option *ngFor="let status of statusOptions" [value]="status">
+              {{ status | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+            <i class="bi bi-x-circle me-1"></i>
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="text-muted">
+      Showing {{ filteredAppointments.length }} of {{ appointments.length }} appointments
+    </div>
+  </div>
+
+  
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading your appointments...</p>
+  </div>
+
+  
+  <div class="row g-4" *ngIf="!isLoading">
+    <div class="col-12" *ngIf="filteredAppointments.length === 0">
+      <div class="card text-center py-5">
+        <div class="card-body">
+          <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+          <h4 class="text-muted">No appointments found</h4>
+          <p class="text-muted">You don't have any appointments matching your criteria.</p>
+          <button class="btn btn-primary" (click)="openCreateModal()">
+            <i class="bi bi-plus-circle me-2"></i>
+            Book Your First Appointment
+          </button>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="col-lg-6 col-xl-4" *ngFor="let appointment of filteredAppointments">
+      <div class="card h-100 appointment-card" [ngClass]="{
+        'border-success': appointment.status === 'confirmed',
+        'border-primary': appointment.status === 'completed',
+        'border-danger': appointment.status === 'cancelled',
+        'border-warning': appointment.status === 'pending'
+      }">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <span [ngClass]="getStatusBadgeClass(appointment.status)">
+              {{ appointment.status | titlecase }}
+            </span>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                    type="button" 
+                    data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li *ngIf="canEditAppointment(appointment)">
+                <a class="dropdown-item" (click)="openEditModal(appointment)">
+                  <i class="bi bi-pencil text-warning me-2"></i>
+                  Edit
+                </a>
+              </li>
+              <li *ngIf="canCancelAppointment(appointment)">
+                <a class="dropdown-item text-danger" (click)="openCancelModal(appointment)">
+                  <i class="bi bi-x-circle me-2"></i>
+                  Cancel
+                </a>
+              </li>
+              <li *ngIf="!canEditAppointment(appointment) && !canCancelAppointment(appointment)">
+                <span class="dropdown-item-text text-muted">
+                  <i class="bi bi-lock me-2"></i>
+                  No actions available
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="card-body">
+
+          <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-calendar-event text-primary me-2"></i>
+              <strong>{{ formatDate(appointment.date) }}</strong>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="bi bi-clock text-primary me-2"></i>
+              <span>{{ formatTime(appointment.time) }}</span>
+            </div>
+          </div>
+
+          
+          <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-heart text-danger me-2"></i>
+              <strong>{{ appointment.petname }}</strong>
+            </div>
+            <div class="row g-2">
+              <div class="col-6" *ngIf="appointment.petBreed">
+                <small class="text-muted">
+                  <i class="bi bi-tag me-1"></i>
+                  {{ appointment.petBreed }}
+                </small>
+              </div>
+              <div class="col-6" *ngIf="appointment.petAge">
+                <small class="text-muted">
+                  <i class="bi bi-calendar me-1"></i>
+                  {{ appointment.petAge }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="mb-3">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-person-badge text-primary me-2"></i>
+              <strong>{{ appointment.docname }}</strong>
+            </div>
+            <small class="text-muted" *ngIf="appointment.appointmentType">
+              {{ appointment.appointmentType }}
+            </small>
+          </div>
+
+          
+          <div class="mb-3" *ngIf="appointment.reasonForVisit">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-clipboard-text text-primary me-2 mt-1"></i>
+              <div>
+                <small class="text-muted d-block">Reason for Visit:</small>
+                <span>{{ appointment.reasonForVisit }}</span>
+              </div>
+            </div>
+          </div>
+
+          
+          <div *ngIf="appointment.notes">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-sticky text-primary me-2 mt-1"></i>
+              <div>
+                <small class="text-muted d-block">Notes:</small>
+                <span>{{ appointment.notes }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-transparent">
+          <small class="text-muted">
+            <i class="bi bi-clock-history me-1"></i>
+            Created: {{ formatDate(appointment.createdAt || '') }}
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal fade" id="cancelAppointmentModal" tabindex="-1" [class.show]="showCancelModal" [style.display]="showCancelModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Cancel Appointment
+          </h5>
+          <button type="button" class="btn-close" (click)="closeCancelModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to cancel this appointment?</p>
+          <div class="alert alert-warning">
+            <strong>Appointment Details:</strong><br>
+            <strong>Pet:</strong> {{ currentAppointment?.petname }}<br>
+            <strong>Date:</strong> {{ currentAppointment?.date | date:'mediumDate' }}<br>
+            <strong>Time:</strong> {{ currentAppointment?.time }}<br>
+            <strong>Doctor:</strong> {{ currentAppointment?.docname }}
+          </div>
+          <p class="text-muted small">
+            <i class="bi bi-info-circle me-1"></i>
+            This action cannot be undone. You can always book a new appointment if needed.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeCancelModal()">Keep Appointment</button>
+          <button 
+            type="button" 
+            class="btn btn-danger" 
+            (click)="cancelAppointment()"
+            [disabled]="isCancelling">
+            <span *ngIf="isCancelling" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isCancelling ? 'Cancelling...' : 'Yes, Cancel Appointment' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-backdrop fade show" *ngIf="showCancelModal"></div>
+</div> 

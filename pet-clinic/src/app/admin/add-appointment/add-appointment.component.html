@@ -1,0 +1,85 @@
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="bi bi-plus-circle me-2"></i>
+    Add New Appointment
+  </h2>
+  <form>
+    <div class="row g-3">
+      <!-- Date & Time -->
+      <div class="col-md-6">
+        <label for="createDate" class="form-label">Date *</label>
+        <input type="date" id="createDate" class="form-control" [(ngModel)]="appointmentForm.date" name="date" required>
+      </div>
+      <div class="col-md-6">
+        <label for="createTime" class="form-label">Time *</label>
+        <input type="time" id="createTime" class="form-control" [(ngModel)]="appointmentForm.time" name="time" required>
+      </div>
+
+      <!-- Pet Details -->
+      <div class="col-md-6">
+        <label for="createPetName" class="form-label">Pet Name *</label>
+        <input type="text" id="createPetName" class="form-control" [(ngModel)]="appointmentForm.petname" name="petname" required>
+      </div>
+      <div class="col-md-3">
+        <label for="createPetAge" class="form-label">Pet Age</label>
+        <input type="text" id="createPetAge" class="form-control" [(ngModel)]="appointmentForm.petAge" name="petAge" placeholder="e.g., 2 years">
+      </div>
+      <div class="col-md-3">
+        <label for="createPetBreed" class="form-label">Pet Breed</label>
+        <input type="text" id="createPetBreed" class="form-control" [(ngModel)]="appointmentForm.petBreed" name="petBreed">
+      </div>
+
+      <!-- Owner Details -->
+      <div class="col-md-6">
+        <label for="createOwnerName" class="form-label">Owner Name *</label>
+        <input type="text" id="createOwnerName" class="form-control" [(ngModel)]="appointmentForm.name" name="name" required>
+      </div>
+      <div class="col-md-6">
+        <label for="createOwnerEmail" class="form-label">Owner Email *</label>
+        <input type="email" id="createOwnerEmail" class="form-control" [(ngModel)]="appointmentForm.email" name="email" required>
+      </div>
+      <div class="col-md-6">
+        <label for="createContactNumber" class="form-label">Contact Number</label>
+        <input type="tel" id="createContactNumber" class="form-control" [(ngModel)]="appointmentForm.contactNumber" name="contactNumber">
+      </div>
+
+      <!-- Doctor & Type -->
+      <div class="col-md-6">
+        <label for="createDoctor" class="form-label">Doctor *</label>
+        <select id="createDoctor" class="form-select" [(ngModel)]="appointmentForm.docname" name="docname" required>
+          <option value="">Select Doctor</option>
+          <option *ngFor="let doctor of doctors" [value]="doctor.name">
+            {{ doctor.name }} - {{ doctor.specialization || 'General Veterinarian' }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="createAppointmentType" class="form-label">Appointment Type *</label>
+        <select id="createAppointmentType" class="form-select" [(ngModel)]="appointmentForm.appointmentType" name="appointmentType" required>
+          <option value="">Select Type</option>
+          <option *ngFor="let service of services" [value]="service.name">
+            {{ service.name }} - Rs.{{ service.price }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Reason & Notes -->
+      <div class="col-12">
+        <label for="createReason" class="form-label">Reason for Visit</label>
+        <input type="text" id="createReason" class="form-control" [(ngModel)]="appointmentForm.reasonForVisit" name="reasonForVisit" placeholder="Brief description of the visit purpose">
+      </div>
+      <div class="col-12">
+        <label for="createNotes" class="form-label">Additional Notes</label>
+        <textarea id="createNotes" class="form-control" rows="3" [(ngModel)]="appointmentForm.notes" name="notes" placeholder="Any additional information..."></textarea>
+      </div>
+    </div>
+    <div class="mt-4 d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="createAppointment()" [disabled]="isCreating">
+        <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!isCreating" class="bi bi-plus-circle me-2"></i>
+        {{ isCreating ? 'Creating...' : 'Create Appointment' }}
+      </button>
+    </div>
+  </form>
+</div>

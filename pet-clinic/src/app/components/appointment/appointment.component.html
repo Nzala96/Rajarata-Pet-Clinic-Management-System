@@ -1,0 +1,144 @@
+
+<main id="main" class="main">
+  <section id="appointment" class="appointment section-bg">
+    <div class="container">
+      <div class="section-title">
+        <h2>Make an Appointment</h2>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" role="form" class="php-email-form">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" [(ngModel)]="username" readonly required>
+            <div class="invalid-feedback">Please enter your name.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" [(ngModel)]="useremail" readonly required>
+            <div class="invalid-feedback">Please enter a valid email address.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" [(ngModel)]="appointmentData.tp" required>
+            <div class="invalid-feedback">Please enter your phone number.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <input type="datetime-local" name="date" class="form-control" id="date" placeholder="Appointment Date" [(ngModel)]="appointmentData.date" required>
+            <div class="invalid-feedback">Please enter a valid date and time.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <select name="pname" id="pname" class="form-select" [(ngModel)]="appointmentData.petname" (change)="onPetSelected(appointmentData.petname)" required>
+              <option value="">Select Your Pet</option>
+              <option *ngFor="let pet of userPets" [value]="pet.name">
+                {{ pet.name }} ({{ pet.breed }})
+              </option>
+            </select>
+            <div *ngIf="isLoadingPets" class="form-text">
+              <small class="text-muted">Loading your pets...</small>
+            </div>
+            <div *ngIf="!isLoadingPets && userPets.length === 0" class="form-text">
+              <small class="text-warning">No pets found. Please add pets to your profile first.</small>
+            </div>
+            <div class="invalid-feedback">Please select your pet</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <select name="doctor" id="doctor" class="form-select" [(ngModel)]="appointmentData.docname" required>
+              <option value="">Select Doctor</option>
+              <option *ngFor="let doctor of doctors" [value]="doctor.dname">{{ doctor.dname }}</option>
+            </select>
+            <div class="invalid-feedback">Please select a doctor.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <input type="text" class="form-control" name="petBreed" id="petBreed" placeholder="Pet Breed" [(ngModel)]="appointmentData.petBreed" readonly>
+            <div class="form-text">Auto-filled when pet is selected</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="text" class="form-control" name="petAge" id="petAge" placeholder="Pet Age" [(ngModel)]="appointmentData.petAge">
+            <div class="form-text">Auto-filled when pet is selected (editable)</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <select name="appointmentType" id="appointmentType" class="form-select" [(ngModel)]="appointmentData.appointmentType">
+              <option value="">Select Service</option>
+              <option *ngFor="let service of services" [value]="service.name">
+                {{ service.name }} - Rs.{{ service.price }}
+              </option>
+            </select>
+            <div *ngIf="isLoadingServices" class="form-text">
+              <small class="text-muted">Loading services...</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)" [(ngModel)]="appointmentData.message"></textarea>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary subBtn">Make an Appointment</button>
+        </div>
+      </form>
+
+    </div>
+  </section>
+</main>
+
+
+<!-- <main id="main" class="main">
+
+  <section id="appointment" class="appointment section-bg">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Make an Appointment</h2>
+      </div>
+
+      <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" [value]="username" readonly required>
+            <div class="invalid-feedback">Please enter your name.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" [value]="useremail" readonly required>
+            <div class="invalid-feedback">Please enter a valid email address.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required>
+            <div class="invalid-feedback">Please enter your phone number.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <input type="datetime-local" name="date" class="form-control" id="date" placeholder="Appointment Date" required>
+            <div class="invalid-feedback">Please enter a valid date and time.</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <input type="pname" class="form-control" name="pname" id="pname" placeholder="Your Pet Name" required>
+            <div class="invalid-feedback">Please enter your pet's name</div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <select name="doctor" id="doctor" class="form-select" required>
+              <option value="">Select Doctor</option>
+              <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.dname }}</option>
+            </select>
+            <div class="invalid-feedback">Please select a doctor.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
+        </div>
+        <div class="mb-3">
+          <div class="loading">Loading</div>
+          <div class="error-message"></div>
+          <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
+        </div>
+        <div class="text-center"><button type="submit" class="btn btn-primary">Make an Appointment</button></div>
+      </form>
+
+    </div>
+  </section>
+
+</main>End #main -->

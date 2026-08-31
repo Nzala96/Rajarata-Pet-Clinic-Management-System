@@ -1,0 +1,274 @@
+// User Appointments Component Styles
+
+.appointment-card {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .card-footer {
+    border-top: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+  }
+}
+
+// Status badge styles
+.badge {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  
+  &.bg-success {
+    background-color: #198754 !important;
+  }
+  
+  &.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+  }
+  
+  &.bg-danger {
+    background-color: #dc3545 !important;
+  }
+  
+  &.bg-primary {
+    background-color: #0d6efd !important;
+  }
+}
+
+// Modal styles
+.modal {
+  .modal-header {
+    border-bottom: 1px solid #dee2e6;
+    
+    .modal-title {
+      font-weight: 600;
+    }
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #dee2e6;
+  }
+}
+
+// Form styles
+.form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  
+  &:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+}
+
+// Button styles
+.btn {
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  
+  &.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    
+    &:hover {
+      background-color: #0b5ed7;
+      border-color: #0a58ca;
+    }
+  }
+  
+  &.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+    
+    &:hover {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+  }
+  
+  &.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+    
+    &:hover {
+      background-color: #ffca2c;
+      border-color: #ffc720;
+    }
+  }
+  
+  &.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    
+    &:hover {
+      background-color: #bb2d3b;
+      border-color: #b02a37;
+    }
+  }
+}
+
+// Dropdown styles
+.dropdown-menu {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    
+    &:hover {
+      background-color: #f8f9fa;
+    }
+    
+    &.text-danger:hover {
+      background-color: #f8d7da;
+    }
+  }
+}
+
+// Loading spinner
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 1rem;
+  }
+  
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+    
+    .d-flex.gap-2 {
+      justify-content: center;
+    }
+  }
+  
+  .appointment-card {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-dialog {
+    margin: 1rem;
+  }
+}
+
+// Animation for cards
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.appointment-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// Custom scrollbar for modals
+.modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+// Alert styles
+.alert {
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  
+  &.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+  }
+}
+
+// Icon styles
+.bi {
+  &.text-primary {
+    color: #0d6efd !important;
+  }
+  
+  &.text-danger {
+    color: #dc3545 !important;
+  }
+  
+  &.text-warning {
+    color: #ffc107 !important;
+  }
+  
+  &.text-success {
+    color: #198754 !important;
+  }
+}
+
+// Empty state styles
+.display-1 {
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+// Card border colors based on status
+.appointment-card {
+  &.border-success {
+    border-color: #198754 !important;
+  }
+  
+  &.border-warning {
+    border-color: #ffc107 !important;
+  }
+  
+  &.border-danger {
+    border-color: #dc3545 !important;
+  }
+  
+  &.border-primary {
+    border-color: #0d6efd !important;
+  }
+} 

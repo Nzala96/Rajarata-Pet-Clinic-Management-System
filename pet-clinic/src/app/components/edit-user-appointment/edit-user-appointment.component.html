@@ -1,0 +1,204 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <i class="bi bi-pencil me-2"></i>
+            Edit Appointment
+          </h2>
+          <p class="text-muted mb-0" *ngIf="currentAppointment">
+            Appointment ID: #{{ currentAppointment.id }}
+          </p>
+        </div>
+        <div class="card-body">
+          <!-- Loading State -->
+          <div *ngIf="isLoadingAppointment" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading appointment details...</p>
+          </div>
+
+          <!-- Edit Form -->
+          <form *ngIf="!isLoadingAppointment && currentAppointment" (ngSubmit)="updateAppointment()">
+            <!-- Status Warning -->
+            <div *ngIf="!canEditAppointment()" class="alert alert-warning mb-4">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              <strong>Note:</strong> This appointment cannot be edited because its status is "{{ currentAppointment.status }}".
+              Only pending and confirmed appointments can be modified.
+            </div>
+
+            <div class="row g-3">
+              <!-- Date and Time -->
+              <div class="col-md-6">
+                <label for="appointmentDate" class="form-label">Appointment Date *</label>
+                <input 
+                  type="date" 
+                  id="appointmentDate"
+                  class="form-control" 
+                  [(ngModel)]="editForm.date"
+                  name="appointmentDate"
+                  [disabled]="!canEditAppointment()"
+                  required>
+              </div>
+              <div class="col-md-6">
+                <label for="appointmentTime" class="form-label">Appointment Time *</label>
+                <input 
+                  type="time" 
+                  id="appointmentTime"
+                  class="form-control" 
+                  [(ngModel)]="editForm.time"
+                  name="appointmentTime"
+                  [disabled]="!canEditAppointment()"
+                  required>
+              </div>
+
+              <!-- Pet Information -->
+              <div class="col-md-6">
+                <label for="petName" class="form-label">Select Pet *</label>
+                <select 
+                  id="petName"
+                  class="form-select" 
+                  [(ngModel)]="editForm.petname"
+                  name="petName"
+                  (change)="onPetSelected(editForm.petname || '')"
+                  [disabled]="!canEditAppointment() || isLoadingPets"
+                  required>
+                  <option value="">Choose your pet...</option>
+                  <option *ngFor="let pet of userPets" [value]="pet.name">
+                    {{ pet.name }} ({{ pet.breed }})
+                  </option>
+                </select>
+                <div *ngIf="isLoadingPets" class="form-text">
+                  <small class="text-muted">Loading pets...</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="petBreed" class="form-label">Pet Breed</label>
+                <input 
+                  type="text" 
+                  id="petBreed"
+                  class="form-control" 
+                  [(ngModel)]="editForm.petBreed"
+                  name="petBreed"
+                  placeholder="Auto-filled when pet is selected"
+                  [disabled]="!canEditAppointment()"
+                  readonly>
+              </div>
+
+              <!-- Pet Age and Contact -->
+              <div class="col-md-6">
+                <label for="petAge" class="form-label">Pet Age</label>
+                <input 
+                  type="text" 
+                  id="petAge"
+                  class="form-control" 
+                  [(ngModel)]="editForm.petAge"
+                  name="petAge"
+                  placeholder="Auto-filled when pet is selected (editable)"
+                  [disabled]="!canEditAppointment()">
+              </div>
+              <div class="col-md-6">
+                <label for="contactNumber" class="form-label">Contact Number *</label>
+                <input 
+                  type="tel" 
+                  id="contactNumber"
+                  class="form-control" 
+                  [(ngModel)]="editForm.contactNumber"
+                  name="contactNumber"
+                  placeholder="Contact number"
+                  [disabled]="!canEditAppointment()"
+                  required>
+              </div>
+
+              <!-- Doctor and Appointment Type -->
+              <div class="col-md-6">
+                <label for="doctor" class="form-label">Select Doctor *</label>
+                <select 
+                  id="doctor"
+                  class="form-select" 
+                  [(ngModel)]="editForm.docname"
+                  name="doctor"
+                  [disabled]="!canEditAppointment()"
+                  required>
+                  <option value="">Choose a doctor...</option>
+                  <option *ngFor="let doctor of doctors" [value]="doctor.dname">
+                    {{ doctor.dname }}
+                    <span *ngIf="doctor.specialization"> - {{ doctor.specialization }}</span>
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="appointmentType" class="form-label">Appointment Type</label>
+                <select 
+                  id="appointmentType"
+                  class="form-select" 
+                  [(ngModel)]="editForm.appointmentType"
+                  name="appointmentType"
+                  [disabled]="!canEditAppointment() || isLoadingServices">
+                  <option value="">Select service...</option>
+                  <option *ngFor="let service of services" [value]="service.name">
+                    {{ service.name }} - Rs.{{ service.price }}
+                  </option>
+                </select>
+                <div *ngIf="isLoadingServices" class="form-text">
+                  <small class="text-muted">Loading services...</small>
+                </div>
+              </div>
+
+              <!-- Reason for Visit -->
+              <div class="col-12">
+                <label for="reasonForVisit" class="form-label">Reason for Visit</label>
+                <input 
+                  type="text" 
+                  id="reasonForVisit"
+                  class="form-control" 
+                  [(ngModel)]="editForm.reasonForVisit"
+                  name="reasonForVisit"
+                  placeholder="Brief description of the visit reason"
+                  [disabled]="!canEditAppointment()">
+              </div>
+
+              <!-- Notes -->
+              <div class="col-12">
+                <label for="notes" class="form-label">Additional Notes</label>
+                <textarea 
+                  id="notes"
+                  class="form-control" 
+                  rows="3"
+                  [(ngModel)]="editForm.notes"
+                  name="notes"
+                  placeholder="Any additional information or special requests"
+                  [disabled]="!canEditAppointment()"></textarea>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between mt-4">
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Appointments
+              </button>
+              
+              <button 
+                type="submit" 
+                class="btn btn-warning"
+                [disabled]="isUpdating || !canEditAppointment()"
+                *ngIf="canEditAppointment()">
+                <span *ngIf="isUpdating" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isUpdating" class="bi bi-check-circle me-2"></i>
+                {{ isUpdating ? 'Updating...' : 'Update Appointment' }}
+              </button>
+
+              <div *ngIf="!canEditAppointment()" class="text-muted">
+                <i class="bi bi-lock me-2"></i>
+                Cannot edit {{ currentAppointment.status }} appointment
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

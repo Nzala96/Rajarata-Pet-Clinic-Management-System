@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h1 class="h3 mb-0">Doctor Details</h1>
+        <p class="text-muted">View detailed information about the doctor</p>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary me-2" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i> Back to Doctors
+        </button>
+        <button class="btn btn-primary" (click)="editDoctor()" *ngIf="doctor">
+          <i class="bi bi-pencil"></i> Edit Doctor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Loading doctor details...</p>
+  </div>
+
+  <!-- Doctor Details -->
+  <div *ngIf="!isLoading && doctor" class="row">
+    <div class="col-lg-4">
+      <!-- Doctor Profile Card -->
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="avatar-placeholder mb-3">
+            <i class="bi bi-person-circle" style="font-size: 5rem; color: #6c757d;"></i>
+          </div>
+          <h4 class="card-title">{{ doctor.dname }}</h4>
+          <p class="text-muted">{{ doctor.specialization || 'General' }}</p>
+          <span class="badge" [class]="getStatusBadgeClass(doctor.available)">
+            {{ getStatusText(doctor.available) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-envelope"></i> Contact Information
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label text-muted">Email</label>
+            <p class="mb-0">{{ doctor.demail }}</p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted">Phone</label>
+            <p class="mb-0">{{ doctor.dtp }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <!-- Professional Information -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-briefcase"></i> Professional Information
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Specialization</label>
+                <p class="mb-0">{{ doctor.specialization || 'General' }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Experience</label>
+                <p class="mb-0">{{ doctor.experience || 0 }} years</p>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted">Education</label>
+            <p class="mb-0">{{ doctor.education || 'Not specified' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Information -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-info-circle"></i> System Information
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Created</label>
+                <p class="mb-0">{{ doctor.created_at | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label text-muted">Last Updated</label>
+                <p class="mb-0">{{ doctor.updated_at | date:'medium' }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted">Doctor ID</label>
+            <p class="mb-0">{{ doctor.id }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !doctor" class="text-center py-5">
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle"></i>
+      <strong>Doctor not found!</strong> The requested doctor could not be found.
+    </div>
+    <button class="btn btn-primary" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Back to Doctors
+    </button>
+  </div>
+</div> 

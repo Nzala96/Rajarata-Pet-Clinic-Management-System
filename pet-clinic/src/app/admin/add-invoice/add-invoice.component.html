@@ -1,0 +1,215 @@
+<div class="container mt-4">
+  <h2 class="mb-4">
+    <i class="bi bi-plus-circle me-2"></i>
+    Create New Invoice
+  </h2>
+  
+  <div class="card">
+    <div class="card-body">
+      <form #createFormRef="ngForm" novalidate>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Patient Name *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="createForm.patient_name" 
+                name="patient_name" 
+                required
+                placeholder="Enter patient name">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Patient Email *</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                [(ngModel)]="createForm.patient_email" 
+                name="patient_email" 
+                required
+                placeholder="Enter patient email">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Patient Phone *</label>
+              <input 
+                type="tel" 
+                class="form-control" 
+                [(ngModel)]="createForm.patient_phone" 
+                name="patient_phone" 
+                required
+                placeholder="Enter patient phone">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Pet Name</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="createForm.pet_name" 
+                name="pet_name" 
+                placeholder="Enter pet name">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Doctor *</label>
+              <select 
+                class="form-select" 
+                #doctorSelect
+                (change)="onDoctorSelected(doctorSelect.value)"
+                name="doctor_id" 
+                required
+                [disabled]="doctors.length === 0">
+                <option value="">{{ doctors.length === 0 ? 'Loading doctors...' : 'Select Doctor' }}</option>
+                <option *ngFor="let doctor of doctors" [value]="doctor.dname">
+                  {{ doctor.dname }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Service *</label>
+              <select 
+                class="form-select" 
+                #serviceSelect
+                (change)="onServiceSelected(+serviceSelect.value)"
+                name="service_id" 
+                required
+                [disabled]="services.length === 0">
+                <option value="">{{ services.length === 0 ? 'Loading services...' : 'Select Service' }}</option>
+                <option *ngFor="let service of services" [value]="service.id">
+                  {{ service.name }} - Rs.{{ service.price }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Service Price (Rs.) *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="createForm.service_price" 
+                name="service_price" 
+                required 
+                min="0" 
+                step="0.01" 
+                readonly
+                placeholder="Auto-filled from service selection">
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label">Service Description</label>
+          <textarea 
+            class="form-control" 
+            rows="2" 
+            [(ngModel)]="createForm.service_description" 
+            name="service_description" 
+            placeholder="Enter service description"></textarea>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Additional Charges ($)</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="createForm.additional_charges" 
+                name="additional_charges" 
+                min="0" 
+                step="0.01" 
+                placeholder="0.00">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Discount ($)</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="createForm.discount" 
+                name="discount" 
+                min="0" 
+                step="0.01" 
+                placeholder="0.00">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label class="form-label">Tax Rate (%)</label>
+              <select 
+                class="form-select" 
+                [(ngModel)]="createForm.tax_rate" 
+                name="tax_rate">
+                <option *ngFor="let rate of taxRates" [value]="rate.value">{{ rate.label }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Due Date *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="createForm.due_date" 
+                name="due_date" 
+                required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Total Amount</label>
+              <div class="form-control-plaintext fw-bold text-success">
+                {{ formatCurrency(calculateTotal()) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label">Notes</label>
+          <textarea 
+            class="form-control" 
+            rows="2" 
+            [(ngModel)]="createForm.notes" 
+            name="notes" 
+            placeholder="Enter any additional notes"></textarea>
+        </div>
+        
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            (click)="createInvoice()" 
+            [disabled]="isCreating || createFormRef.invalid">
+            <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isCreating" class="bi bi-plus-circle me-2"></i>
+            {{ isCreating ? 'Creating...' : 'Create Invoice' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

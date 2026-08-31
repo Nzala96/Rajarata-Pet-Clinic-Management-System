@@ -1,0 +1,651 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+      <i class="bi bi-graph-up me-2"></i>
+      Reports & Analytics
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="exportReport()">
+          <i class="bi bi-download me-1"></i>
+          Export Report
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="bi bi-funnel me-2"></i>
+            Filters & Date Range
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="dateRange" class="form-label">Date Range</label>
+              <select class="form-select" id="dateRange" [ngModel]="dateRange" (ngModelChange)="dateRange = $event; onDateRangeChange()">
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="365">Last Year</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="exportFormat" class="form-label">Export Format</label>
+              <select class="form-select" id="exportFormat" [ngModel]="exportFormat" (ngModelChange)="exportFormat = $event">
+                <option value="pdf">PDF</option>
+                <option value="excel">Excel</option>
+                <option value="csv">CSV</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" id="includeCharts" [ngModel]="includeCharts" (ngModelChange)="includeCharts = $event">
+                <label class="form-check-label" for="includeCharts">
+                  Include Charts in Export
+                </label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary mt-4" (click)="refreshAllReports()">
+                <i class="bi bi-arrow-clockwise me-1"></i>
+                Refresh Reports
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs mb-4" id="reportsTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" 
+              [class.active]="activeTab === 'appointments'"
+              (click)="setActiveTab('appointments')"
+              type="button" 
+              role="tab">
+        <i class="bi bi-calendar-check me-2"></i>
+        Appointment Statistics
+      </button>
+    </li>
+    <!-- <li class="nav-item" role="presentation">
+      <button class="nav-link" 
+              [class.active]="activeTab === 'clients'"
+              (click)="setActiveTab('clients')"
+              type="button" 
+              role="tab">
+        <i class="bi bi-people me-2"></i>
+        Client & Pet Visit Frequency
+      </button>
+    </li> -->
+    <!-- <li class="nav-item" role="presentation">
+      <button class="nav-link" 
+              [class.active]="activeTab === 'earnings'"
+              (click)="setActiveTab('earnings')"
+              type="button" 
+              role="tab">
+        <i class="bi bi-cash-stack me-2"></i>
+        Earnings Report
+      </button>
+    </li> -->
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="reportsTabContent">
+
+    <!-- Appointment Statistics Tab -->
+    <div class="tab-pane fade" 
+         [class.show]="activeTab === 'appointments'"
+         [class.active]="activeTab === 'appointments'"
+         role="tabpanel">
+      
+      <div *ngIf="loadingAppointments" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading appointment statistics...</p>
+      </div>
+
+      <div *ngIf="!loadingAppointments && appointmentStats">
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                      Total Appointments
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ appointmentStats.totalAppointments || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                      Completed
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ appointmentStats.completedAppointments || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                      Pending
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ appointmentStats.pendingAppointments || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-clock fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                      Today's Appointments
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ appointmentStats.todayAppointments || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-calendar-day fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Detailed Statistics</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h6>This Week</h6>
+                    <p class="h4 text-primary">{{ appointmentStats.thisWeekAppointments || 0 }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <h6>This Month</h6>
+                    <p class="h4 text-success">{{ appointmentStats.thisMonthAppointments || 0 }}</p>
+                  </div>
+                  <div class="col-md-4">
+                    <h6>Average per Day</h6>
+                    <p class="h4 text-info">{{ (appointmentStats.averageAppointmentsPerDay || 0).toFixed(1) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Appointments Table -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="card-title mb-0">All Appointments</h6>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-primary" (click)="exportReport()">
+                    <i class="bi bi-download me-1"></i>
+                    Export to PDF
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Pet Name</th>
+                        <th>Owner Name</th>
+                        <th>Doctor</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <!-- <th>Notes</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let appointment of allAppointments || []">
+                        <td>{{ appointment.id }}</td>
+                        <td>{{ formatDate(appointment.date) }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.petname || 'N/A' }}</td>
+                        <td>{{ appointment.name || 'N/A' }}</td>
+                        <td>{{ appointment.docname || 'N/A' }}</td>
+                        <td>
+                          <span class="badge" [class]="getStatusBadgeClass(appointment.status)">
+                            {{ capitalizeFirst(appointment.status) }}
+                          </span>
+                        </td>
+                        <td>{{ appointment.appointmentType || 'N/A' }}</td>
+                        <!-- <td>
+                          <span *ngIf="appointment.notes" class="text-truncate d-inline-block" style="max-width: 150px;" title="{{ appointment.notes }}">
+                            {{ appointment.notes }}
+                          </span>
+                          <span *ngIf="!appointment.notes" class="text-muted">-</span>
+                        </td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div *ngIf="!allAppointments || allAppointments.length === 0" class="text-center py-4">
+                  <p class="text-muted">No appointments found for the selected filters.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client Visit Frequency Tab -->
+    <div class="tab-pane fade" 
+         [class.show]="activeTab === 'clients'"
+         [class.active]="activeTab === 'clients'"
+         role="tabpanel">
+      
+      <div *ngIf="loadingClients" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading client visit data...</p>
+      </div>
+
+      <div *ngIf="!loadingClients && clientVisitData">
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                      Total Clients
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ clientVisitData.totalClients || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-people fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                      Active Clients
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ clientVisitData.activeClients || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-person-check fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                      New This Month
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ clientVisitData.newClientsThisMonth || 0 }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-person-plus fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                      Retention Rate
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ formatPercentage(clientVisitData.clientRetentionRate || 0) }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-graph-up fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Visiting Clients -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Top Visiting Clients</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Client Name</th>
+                        <th>Total Visits</th>
+                        <th>Last Visit</th>
+                        <th>Total Spent</th>
+                        <th>Pets</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let client of clientVisitData.topVisitingClients || []">
+                        <td>{{ client.clientName }}</td>
+                        <td>
+                          <span class="badge bg-primary">{{ client.totalVisits }}</span>
+                        </td>
+                        <td>{{ formatDate(client.lastVisit) }}</td>
+                        <td>{{ formatCurrency(client.totalSpent) }}</td>
+                        <td>
+                          <span class="badge bg-secondary me-1" *ngFor="let pet of client.pets">
+                            {{ pet }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Visit Stats -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Client Visit Statistics</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Client Name</th>
+                        <th>Email</th>
+                        <th>Total Visits</th>
+                        <th>First Visit</th>
+                        <th>Last Visit</th>
+                        <th>Avg Visits/Month</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let client of clientVisitData.clientVisitStats || []">
+                        <td>{{ client.clientName }}</td>
+                        <td>{{ client.email }}</td>
+                        <td>
+                          <span class="badge bg-primary">{{ client.totalVisits }}</span>
+                        </td>
+                        <td>{{ formatDate(client.firstVisit) }}</td>
+                        <td>{{ formatDate(client.lastVisit) }}</td>
+                        <td>{{ (client.averageVisitsPerMonth || 0).toFixed(1) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earnings Report Tab -->
+    <div class="tab-pane fade" 
+         [class.show]="activeTab === 'earnings'"
+         [class.active]="activeTab === 'earnings'"
+         role="tabpanel">
+      
+      <div *ngIf="loadingEarnings" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading earnings data...</p>
+      </div>
+
+      <div *ngIf="!loadingEarnings && earningsData">
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                      Total Revenue
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ formatCurrency(earningsData.totalRevenue || 0) }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-cash-stack fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                      Paid Amount
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ formatCurrency(earningsData.totalPaidAmount || 0) }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                      Outstanding
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ formatCurrency(earningsData.totalOutstandingAmount || 0) }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                      Avg Invoice
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                      {{ formatCurrency(earningsData.averageInvoiceAmount || 0) }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="bi bi-receipt fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+     
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Revenue by Doctor</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Doctor Name</th>
+                        <th>Revenue</th>
+                        <th>Appointments</th>
+                        <th>Avg Revenue/Appointment</th>
+                        <th>% of Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let doctor of earningsData.revenueByDoctor || []">
+                        <td>{{ doctor.doctorName }}</td>
+                        <td>{{ formatCurrency(doctor.revenue) }}</td>
+                        <td>
+                          <span class="badge bg-primary">{{ doctor.appointments }}</span>
+                        </td>
+                        <td>{{ formatCurrency(doctor.averageRevenuePerAppointment) }}</td>
+                        <td>{{ formatPercentage(doctor.percentageOfTotal) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Outstanding Invoices -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="card-title mb-0">Outstanding Invoices</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Invoice #</th>
+                        <th>Patient Name</th>
+                        <th>Amount</th>
+                        <th>Due Date</th>
+                        <th>Days Overdue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let invoice of earningsData.outstandingInvoices || []">
+                        <td>{{ invoice.invoiceNumber }}</td>
+                        <td>{{ invoice.patientName }}</td>
+                        <td>{{ formatCurrency(invoice.amount) }}</td>
+                        <td>{{ formatDate(invoice.dueDate) }}</td>
+                        <td>
+                          <span class="badge" 
+                                [class.bg-warning]="invoice.daysOverdue <= 30"
+                                [class.bg-danger]="invoice.daysOverdue > 30">
+                            {{ invoice.daysOverdue }} days
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

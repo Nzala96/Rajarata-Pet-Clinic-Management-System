@@ -1,0 +1,465 @@
+// User Profile Component Styles
+
+.profile-bg {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+.card-header {
+  border-radius: 15px 15px 0 0 !important;
+  border-bottom: none;
+  padding: 1.5rem;
+  
+  &.bg-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    color: #495057;
+  }
+  
+  &.bg-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  }
+  
+  &.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+  }
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+// Profile Header Styles
+.profile-header {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    
+    i {
+      font-size: 2rem;
+    }
+  }
+  
+  h3 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .text-light {
+    opacity: 0.9;
+  }
+}
+
+// Profile Info Items
+.profile-info-item {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #007bff;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+  }
+  
+  .label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    i {
+      color: #007bff;
+    }
+  }
+  
+  .value {
+    font-size: 1.1rem;
+    color: #212529;
+    font-weight: 500;
+  }
+}
+
+// Form Controls
+.form-control-plaintext {
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6;
+  }
+  
+  i {
+    opacity: 0.7;
+  }
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  padding: 0.75rem;
+  
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  &.is-valid {
+    border-color: #28a745;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+  }
+  
+  &.is-invalid {
+    border-color: #dc3545;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  
+  i {
+    color: #007bff;
+  }
+}
+
+// Buttons
+.btn {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:disabled {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  &.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+.btn-group {
+  .btn {
+    border-radius: 8px;
+    
+    &:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    
+    &:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+// Alerts
+.alert {
+  border: none;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  
+  &.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+  }
+  
+  &.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
+    color: #721c24;
+  }
+  
+  &.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #b8daff 100%);
+    color: #0c5460;
+    
+    ul {
+      margin-bottom: 0;
+      padding-left: 1.5rem;
+      
+      li {
+        margin-bottom: 0.25rem;
+        transition: color 0.3s ease;
+        
+        &.text-success {
+          color: #28a745 !important;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Spinners
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+// Badges
+.badge {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+// Form Validation
+.invalid-feedback,
+.valid-feedback {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+// Upcoming Appointments Styles
+.appointments-list {
+  max-height: 400px;
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+.appointment-item {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  
+  &:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+  
+  &:last-child {
+    border-bottom: none !important;
+  }
+  
+  &.border-primary {
+    border-left-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+  
+  &.border-warning {
+    border-left-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.05);
+  }
+}
+
+.appointment-date {
+  .date-display {
+    font-weight: 600;
+    font-size: 1rem;
+    
+    &.text-primary {
+      color: #007bff !important;
+    }
+    
+    &.text-warning {
+      color: #ffc107 !important;
+    }
+  }
+  
+  .time-display {
+    font-size: 0.875rem;
+  }
+}
+
+.appointment-details {
+  .pet-info {
+    font-size: 0.95rem;
+    
+    strong {
+      color: #495057;
+    }
+  }
+  
+  .doctor-info {
+    font-size: 0.875rem;
+  }
+  
+  .appointment-type {
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+}
+
+.today-indicator,
+.tomorrow-indicator {
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .profile-bg {
+    padding: 1rem !important;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .btn-group {
+    width: 100%;
+    
+    .btn {
+      flex: 1;
+    }
+  }
+  
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+    
+    .btn-group {
+      align-self: stretch;
+    }
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    
+    .avatar {
+      margin: 0 auto 1rem;
+    }
+    
+    .ms-auto {
+      margin-top: 1rem;
+      margin-left: 0 !important;
+    }
+  }
+  
+  .appointments-list {
+    max-height: 300px;
+  }
+}
+
+// Animation for form transitions
+.card {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Loading state styles
+.text-center.py-5 {
+  .spinner-border {
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}
+
+// Focus styles for better accessibility
+.btn:focus,
+.form-control:focus {
+  outline: none;
+}
+
+// Enhanced hover effects
+.profile-info-item:hover,
+.appointment-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Card height consistency
+.card.h-100 {
+  min-height: 400px;
+}
+
+// Empty state styling
+.bi-calendar-x {
+  opacity: 0.5;
+}
+
+// Link styling
+a.btn {
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: none;
+  }
+}
+
