@@ -159,6 +159,23 @@ User / Practitioner enters symptoms
 | **Development Environment** | Visual Studio Code |
 | **Local Server**            | XAMPP / Apache     |
 
+## 🧪 Testing & Quality Assurance
+
+Testing documentation is maintained to support systematic verification of the Rajarata Pet Clinic Management System (RPCMS).
+
+### Test Scenario Documentation
+
+The test scenario document outlines functional areas and expected system behaviour to support structured testing of the application's key features.
+
+**Document:** [RPCMS Test Scenarios](./testing)
+
+**Testing objectives:**
+- Verify core application workflows and functional requirements.
+- Check expected behaviour for valid and invalid inputs.
+- Identify potential defects and usability issues.
+- Organize test scenarios by feature or module for easier test coverage review.
+
+The test scenarios serve as a foundation for test case development and future regression testing.
 
 # 📄 Project Purpose
 This project was developed for academic and educational purposes to demonstrate practical skills in full-stack web application development and software engineering.
